@@ -25,8 +25,17 @@ public class KafkaMessageProducer
 	{
 		RecordHeaders headers = new RecordHeaders();
 		headers.add(new RecordHeader("tenantId", tid.getBytes()));
-		
-		ProducerRecord<String, Object> producerRecord = new ProducerRecord<String, Object>("site_1", null, null, message, headers);
+		ProducerRecord<String, Object> producerRecord = null;
+		if("tenant-1".equals(tid))
+		{
+			producerRecord = new ProducerRecord<String, Object>("site_1", null, null,
+					message, headers);
+		}
+		else if("tenant-2".equals(tid))
+		{
+			producerRecord = new ProducerRecord<String, Object>("site_2", null, null,
+					message, headers);
+		}
 		CompletableFuture<SendResult<String, Object>> send = kafkaTemplate.send(producerRecord);
 //		CompletableFuture<SendResult<String, Object>> send = kafkaTemplate.send("site_1", message);
 		send.whenComplete((result, exception)->{
